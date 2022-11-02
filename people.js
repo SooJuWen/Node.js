@@ -1,4 +1,4 @@
-const people = ['jason', 'wen', 'junja', 'eric'];
+const people = ['soo', 'ju', 'wen', 'aaa'];
 const number = [10, 22, 36];
 
 console.log(people);
