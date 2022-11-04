@@ -9,6 +9,17 @@ app.set('view engine', 'ejs');
 //listen for requests
 app.listen(3000);
 
+//middleware - it handles between request coming in and response going out
+app.use((req, res, next) => {
+    console.log('new request made:');
+    console.log('host: ', req.hostname);
+    console.log('path: ', req.path);
+    console.log('method: ', req.method);
+    next();
+})
+
+app.use(express.static('public'));
+
 app.get('/', (req, res) => {
     //res.send('<p>Hello Express<p>');
     //res.sendFile('./views/index.html', {root: __dirname});
