@@ -1,3 +1,4 @@
+const { render } = require('ejs');
 const express = require('express');
 const mongoose = require('mongoose');
 const Blog = require('./models/blog');
@@ -27,6 +28,7 @@ app.use((req, res, next) => {
 })
 
 app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true})); // this can be used to accept form data - to get the html page data
 
 // mongoose and mongo sandbox routes
 app.get('/add-blog', (req, res) => {
@@ -81,6 +83,41 @@ app.get('/blogs', (req, res) => {
     })
 })
 
+app.post('/blogs', (req, res) => {
+    const blog = new Blog(req.body);
+
+    blog.save()
+        .then((result) => {
+            res.redirect('/blogs');
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+})
+
+// use :xxx for variable id to handle the changeable part on the address
+app.get('/blogs/:id', (req, res) => {
+    const id = req.params.id;
+    Blog.findById(id)
+        .then(result => {
+            res.render('details', { blog: result, title: 'Blog Details'})
+        })
+        .catch(err => {
+            console.log(err);
+        });
+})
+
+app.delete('/blogs/:id', (req, res) => {
+    const id = req.params.id;
+    
+    Blog.findByIdAndDelete(id)
+        .then(result => {
+            res.json({ redirect: '/blogs' })
+        })
+        .catch(err => {
+            console.log(err);
+        })
+})
 
 app.get('/about', (req, res) => {
     //res.send('<p>Hello Express<p>');
